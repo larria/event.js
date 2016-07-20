@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>event test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no"/>
+    <script src="src/event.js"></script>
+    <style>
+        h2{}
+        .wrap{ padding: 10px 50px; background-color: #eee;}
+        .child{margin: 20px; background-color: lightblue; font-size: 30px;}
+        .btn{ display: inline-block; margin: 10px; font-size: 16px;}
+    </style>
+</head>
+<body>
+    <h2>基础</h2>
+    <div class="wrap" id="wrap-base">
+        <div class="child" id="child-base">click here</div>
+    </div>
+    <button class="btn" id="btn-trigger-base">trigger 'click' on child</button>
+    <button class="btn" id="btn-off-base">off all</button>
+    <script>
+        var wrap = document.getElementById('wrap-base');
+        var child = document.getElementById('child-base');
+        var btnTrigger = document.getElementById('btn-trigger-base');
+        var btnOff = document.getElementById('btn-off-base');
+
+        evt.on(wrap, 'click', function () {
+            alert('Got clicked on: ' + this.className);
+        });
+
+        evt.on(child, 'click', function () {
+            alert('Got clicked on: ' + this.className);
+        });
+
+        evt.on(child, 'click', function () {
+            alert('Got clicked again on: ' + this.className);
+        });
+
+        evt.on(btnTrigger, 'click', function () {
+            evt.trigger(wrap.querySelector('.child'), 'click');
+        });
+
+        evt.on(btnOff, 'click', function () {
+            evt.off(wrap, 'click');
+            evt.off(child, 'click');
+        });
+    </script>
+    <h2>委派</h2>
+    <div class="wrap" id="wrap-delegate">
+        <div class="child child1">click here</div>
+        <div class="child child2">click here</div>
+        <div class="child child1">click here</div>
+    </div>
+    <button class="btn" id="btn-trigger-delegate">trigger 'click' on the 2nd child</button>
+    <button class="btn" id="btn-off-delegate">off</button>
+    <script>
+        var wrap = document.getElementById('wrap-delegate');
+        var btnTrigger = document.getElementById('btn-trigger-delegate');
+        var btnOff = document.getElementById('btn-off-delegate');
+
+        evt.on(wrap, 'click', '.child', function () {
+            alert('Got clicked on: ' + this.className + ', from delegate');
+        });
+
+        evt.on(btnTrigger, 'click', function () {
+            evt.trigger(wrap.querySelectorAll('.child')[0], 'click');
+        });
+
+        evt.on(btnOff, 'click', function () {
+            evt.off(wrap, 'click');
+        });
+    </script>
+    <h2>封装tap（移动设备查看）</h2>
+    <div class="wrap" id="wrap-tap">
+        <div class="child">tap here</div>
+        <div class="child">tap here</div>
+    </div>
+    <button class="btn" id="btn-trigger-tap">trigger 'tap' on the 2nd child</button>
+    <button class="btn" id="btn-off-tap">off all</button>
+    <script>
+    (function(){
+        evt.special.tap = function (el) {
+            var isTap = false,
+                timeLimit;
+            evt._addEvent(el, 'touchstart', function (e) {
+                isTap = true;
+                timeLimit = setTimeout(function () {
+                    isTap = false;
+                }, 200);
+            });
+            evt._addEvent(el, 'touchmove', function (e) {
+                isTap = false;
+                timeLimit && clearTimeout(timeLimit);
+            });
+            evt._addEvent(el, 'touchend', function (e) {
+                if(isTap) {
+                    evt._dispatch(el, 'tap', e);
+                }
+                timeLimit && clearTimeout(timeLimit);
+            });
+        };
+
+        var wrap = document.getElementById('wrap-tap');
+        var btnTrigger = document.getElementById('btn-trigger-tap');
+        var btnOff = document.getElementById('btn-off-tap');
+
+        evt.on(wrap, 'tap', function () {
+            alert('Got tapped on: ' + this.className);
+        });
+
+        evt.on(wrap, 'tap', '.child', function () {
+            alert('Got tapped on: ' + this.className + ', by delegate');
+        });
+
+        evt.on(btnTrigger, 'click', function () {
+            evt.trigger(wrap.querySelectorAll('.child')[1], 'tap');
+        });
+
+        evt.on(btnOff, 'click', function () {
+            evt.off(wrap, 'tap');
+        });
+    })();
+    </script>
+    <h2>自定义虚拟事件</h2>
+    <div class="wrap" id="wrap-custom">
+        <div class="child">none</div>
+        <div class="child">trigger from here</div>
+    </div>
+    <button class="btn" id="btn-trigger-custom">trigger 'custom' on the 2nd child</button>
+    <script>
+    (function(){
+        var wrap = document.getElementById('wrap-custom');
+        var btnTrigger = document.getElementById('btn-trigger-custom');
+
+        evt.on(wrap, 'custom', function () {
+            alert('Got customed on: ' + this.className);
+        });
+
+        evt.on(wrap, 'custom', '.child', function () {
+            alert('Got customed on: ' + this.className + ', by delegate');
+        });
+
+        evt.on(btnTrigger, 'click', function () {
+            evt.trigger(wrap.querySelectorAll('.child')[1], 'custom');
+        });
+    })();
+    </script>
+</body>
+</html>
