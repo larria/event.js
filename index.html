@@ -125,7 +125,7 @@
     <h2>自定义虚拟事件</h2>
     <div class="wrap" id="wrap-custom">
         <div class="child">none</div>
-        <div class="child">trigger from here</div>
+        <div class="child">triggered from here</div>
     </div>
     <button class="btn" id="btn-trigger-custom">trigger 'custom' on the 2nd child</button>
     <script>
@@ -133,16 +133,18 @@
         var wrap = document.getElementById('wrap-custom');
         var btnTrigger = document.getElementById('btn-trigger-custom');
 
-        evt.on(wrap, 'custom', function () {
-            alert('Got customed on: ' + this.className);
+        evt.on(wrap, 'custom', function (e) {
+            alert('Got customed on: ' + this.className + ', with message: "' + e.msg + '"');
         });
 
-        evt.on(wrap, 'custom', '.child', function () {
-            alert('Got customed on: ' + this.className + ', by delegate');
+        evt.on(wrap, 'custom', '.child', function (e) {
+            alert('Got customed on: ' + this.className + ', by delegate, with message: "' + e.msg + '"');
         });
 
         evt.on(btnTrigger, 'click', function () {
-            evt.trigger(wrap.querySelectorAll('.child')[1], 'custom');
+            evt.trigger(wrap.querySelectorAll('.child')[1], 'custom', {
+                msg : 'This is a custom event'
+            });
         });
     })();
     </script>

@@ -113,7 +113,8 @@
     }
 
     function trigger (el, type, e) {
-        e = e || {target : el};
+        !e || !e.target && _extend(e, {target : el});
+        console.log(e);
         while(el) {
             _dispatch(el, type, e);
             el = el.parentNode;
@@ -121,8 +122,8 @@
     }
 
     function _dispatch (el, type, e) {
-        e = e || {target : el};
         var i, len;
+        !e || !e.target && _extend(e, {target : el});
         if(el.delegs && el.delegs[type]) {
             for(i = 0, len = el.delegs[type].length; i < len; i++) {
                 el.delegs[type][i].wrapHandle.call(el, e);
@@ -181,6 +182,15 @@
         }
         return false;
     }
+    function _extend (obj, toExtendObj) {
+        if(typeof obj !== 'object') {
+            obj = {};
+        }
+        for(var i in toExtendObj) {
+            obj[i] = toExtendObj[i];
+        }
+    }
+
     // export
     evt._addEvent = _addEvent;
     evt._dispatch = _dispatch;
