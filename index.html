@@ -20,6 +20,7 @@
     <button class="btn" id="btn-trigger-base">trigger 'click' on child</button>
     <button class="btn" id="btn-off-base">off all</button>
     <script>
+    (function(){
         var wrap = document.getElementById('wrap-base');
         var child = document.getElementById('child-base');
         var btnTrigger = document.getElementById('btn-trigger-base');
@@ -45,16 +46,18 @@
             evt.off(wrap, 'click');
             evt.off(child, 'click');
         });
+    })();
     </script>
     <h2>委派</h2>
     <div class="wrap" id="wrap-delegate">
         <div class="child child1">click here</div>
         <div class="child child2">click here</div>
-        <div class="child child1">click here</div>
+        <div class="child child3">click here</div>
     </div>
     <button class="btn" id="btn-trigger-delegate">trigger 'click' on the 2nd child</button>
     <button class="btn" id="btn-off-delegate">off</button>
     <script>
+    (function(){
         var wrap = document.getElementById('wrap-delegate');
         var btnTrigger = document.getElementById('btn-trigger-delegate');
         var btnOff = document.getElementById('btn-off-delegate');
@@ -64,12 +67,13 @@
         });
 
         evt.on(btnTrigger, 'click', function () {
-            evt.trigger(wrap.querySelectorAll('.child')[0], 'click');
+            evt.trigger(wrap.querySelectorAll('.child')[1], 'click');
         });
 
         evt.on(btnOff, 'click', function () {
             evt.off(wrap, 'click');
         });
+    })();
     </script>
     <h2>封装tap（移动设备查看）</h2>
     <div class="wrap" id="wrap-tap">

@@ -113,8 +113,9 @@
     }
 
     function trigger (el, type, e) {
-        !e || !e.target && _extend(e, {target : el});
-        console.log(e);
+        if(!e || !e.target) {
+            e = _fixEvent(e, {target : el});
+        }
         while(el) {
             _dispatch(el, type, e);
             el = el.parentNode;
@@ -123,7 +124,9 @@
 
     function _dispatch (el, type, e) {
         var i, len;
-        !e || !e.target && _extend(e, {target : el});
+        if(!e || !e.target) {
+            e = _fixEvent(e, {target : el});
+        }
         if(el.delegs && el.delegs[type]) {
             for(i = 0, len = el.delegs[type].length; i < len; i++) {
                 el.delegs[type][i].wrapHandle.call(el, e);
@@ -159,6 +162,16 @@
         }
     }
 
+    function _fixEvent (obj, toExtendObj) {
+        if(typeof obj !== 'object') {
+            obj = {};
+        }
+        for(var i in toExtendObj) {
+            obj[i] = toExtendObj[i];
+        }
+        return obj;
+    }
+
     function _addEvent (el, type, fn) {
         if (el.addEventListener)
             el.addEventListener(type, fn, false);
@@ -181,14 +194,6 @@
             if (a === b) return true;
         }
         return false;
-    }
-    function _extend (obj, toExtendObj) {
-        if(typeof obj !== 'object') {
-            obj = {};
-        }
-        for(var i in toExtendObj) {
-            obj[i] = toExtendObj[i];
-        }
     }
 
     // export
