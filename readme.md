@@ -62,7 +62,7 @@ evt.on(wrap, 'custom', '.child', function (e) {
 evt.trigger(child3, 'custom');
 ```
 
-##### special : 封装事件容器
+##### special : 封装复杂事件容器，用于封装tap等常用复杂事件、以及input、DOMSubtreeModified等事件的跨浏览器兼容
 
 ```javascript
 // 封装一个tap事件
@@ -100,8 +100,8 @@ evt.on(wrap, 'tap', '.child', function () {
 
 - bind(element, event, fn) : 在element上监听event事件
 
-- unbind(element\[, event, fn\]) : 解除element上监听event事件
+- unbind(element\[, event, fn\]) : 解除element上event事件的监听
 
 - delegate(element, event, deleQuery, fn) : 在element上委派监听event事件
 
-- undelegate(element\[, event, deleQuery, fn\]) : 解除element上委派的监听event事件
+- undelegate(element\[, event, deleQuery, fn\]) : 解除element上委派的event事件的监听
