@@ -7,7 +7,7 @@
 
 <h3 id="api"><a name="user-content-api" href="#api" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>API</h3>
 <h4 id="_3"><a name="user-content-_3" href="#_3" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>核心方法</h4>
-<h5 id="onelement-event-91selector93-fn-elementeventselector"><a name="user-content-onelement-event-91selector93-fn-elementeventselector" href="#onelement-event-91selector93-fn-elementeventselector" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>on(element, event, [selector], fn) : 在element上监听event事件，当设定selector时为委派</h5>
+<h5 id="onelement-event91-selector93-fn-elementeventselector"><a name="user-content-onelement-event91-selector93-fn-elementeventselector" href="#onelement-event91-selector93-fn-elementeventselector" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>on(element, event[, selector], fn) : 在element上监听event事件，当设定selector时为委派</h5>
 <pre><code class="javascript">// 普通事件监听
 evt.on(element, 'click', function (e) {
     alert('Got clicked on: ' + this.className);
@@ -18,7 +18,7 @@ evt.on(wrap, 'click', '.child', function (e) {
 });
 </code></pre>
 
-<h5 id="offelement-91event-selector-fn93-element"><a name="user-content-offelement-91event-selector-fn93-element" href="#offelement-91event-selector-fn93-element" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>off(element, [event, selector, fn]) : 为element解绑事件</h5>
+<h5 id="offelement91-event-selector-fn93-element"><a name="user-content-offelement91-event-selector-fn93-element" href="#offelement91-event-selector-fn93-element" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>off(element[, event, selector, fn]) : 为element解绑事件</h5>
 <pre><code class="javascript">// 解除wrap节点上委派给子节点的click事件监听onclick
 evt.off(wrap, 'click', '.child', onclick);
 // 解除element节点上的click事件特定监听onclick
@@ -29,7 +29,7 @@ evt.off(element, 'click');
 evt.off(element);
 </code></pre>
 
-<h5 id="triggerelement-event-91eventobject93"><a name="user-content-triggerelement-event-91eventobject93" href="#triggerelement-event-91eventobject93" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>trigger(element, event, [eventObject]) : 手动触发事件</h5>
+<h5 id="triggerelement-event91-eventobject93"><a name="user-content-triggerelement-event91-eventobject93" href="#triggerelement-event91-eventobject93" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>trigger(element, event[, eventObject]) : 手动触发事件</h5>
 <pre><code class="javascript">// 在element上手动触发click事件，（可选）并补齐事件对象信息
 evt.trigger(element, 'click', {
     pageX : 0,

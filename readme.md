@@ -14,7 +14,7 @@
 
 #### 核心方法
 
-##### on(element, event, \[selector\], fn) : 在element上监听event事件，当设定selector时为委派
+##### on(element, event\[, selector\], fn) : 在element上监听event事件，当设定selector时为委派
 
 ```javascript
 // 普通事件监听
@@ -27,7 +27,7 @@ evt.on(wrap, 'click', '.child', function (e) {
 });
 ```
 
-##### off(element, \[event, selector, fn\]) : 为element解绑事件
+##### off(element\[, event, selector, fn\]) : 为element解绑事件
 
 ```javascript
 // 解除wrap节点上委派给子节点的click事件监听onclick
@@ -40,7 +40,7 @@ evt.off(element, 'click');
 evt.off(element);
 ```
 
-##### trigger(element, event, \[eventObject\]) : 手动触发事件
+##### trigger(element, event\[, eventObject\]) : 手动触发事件
 
 ```javascript
 // 在element上手动触发click事件，（可选）并补齐事件对象信息
