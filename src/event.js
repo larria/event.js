@@ -1,6 +1,12 @@
+/*
+ * event.js
+ * @author : Zhong Yuan 2016.6.22
+ * @version : v1.1
+ */
 (function(){
     var evt = {};
     var special = {};
+    var _bcObj = {};
 
     function on (el) {
         var type, deleQuery, handle;
@@ -112,10 +118,19 @@
         }
     }
 
+    function subscribe (type, handle) {
+        on(_bcObj, type, handle);
+    }
+
+    function unsubscribe (type, handle) {
+        off(_bcObj, type, handle);
+    }
+
+    function publish (type, pubData) {
+        trigger(_bcObj, type, pubData);
+    }
+
     function trigger (el, type, e) {
-        if(!e || !e.target) {
-            e = _fixEvent(e, {target : el});
-        }
         while(el) {
             _dispatch(el, type, e);
             el = el.parentNode;
@@ -125,7 +140,10 @@
     function _dispatch (el, type, e) {
         var i, len;
         if(!e || !e.target) {
-            e = _fixEvent(e, {target : el});
+            e = _fixEvent(e, {
+                target : el,
+                type : type
+            });
         }
         if(el.delegs && el.delegs[type]) {
             for(i = 0, len = el.delegs[type].length; i < len; i++) {
@@ -205,6 +223,9 @@
     evt.unbind = unbind;
     evt.delegate = delegate;
     evt.undelegate = undelegate;
+    evt.subscribe = subscribe;
+    evt.unsubscribe = unsubscribe;
+    evt.publish = publish;
     evt.trigger = trigger;
     evt.special = special;
     if (typeof module !== 'undefined' && module.exports && this.module !== module) { module.evt = evt; }

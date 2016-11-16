@@ -2,7 +2,11 @@
 
 ### 特性
 
-支持事件委派、随意封装tap等自定义特殊事件、虚拟事件；仿jQuery API设计；基于原生js，无第三方依赖
+- 支持事件委派（非focus、blur等不冒泡事件除外）
+- 支持监听及手动触发自定义虚拟事件
+- 支持封装tap、scrollend等自定义特殊事件
+- 支持广播机制
+- 基于原生js，无第三方依赖
 
 ### 资源引用
 
@@ -40,7 +44,9 @@ evt.off(element, 'click');
 evt.off(element);
 ```
 
-##### trigger(element, event\[, eventObject\]) : 手动触发事件
+##### trigger(element, event\[, eventFix\]) : 手动触发事件
+
+`eventFix为对象类型，可用以为事件监听者补充必要数据（自定义虚拟和封装事件时使用较多），但禁用以下键名：target、type`
 
 ```javascript
 // 在element上手动触发click事件，（可选）并补齐事件对象信息
@@ -48,14 +54,14 @@ evt.trigger(element, 'click', {
     pageX : 0,
     pageY : 0
 });
-// 虚拟事件监听和触发
+// 自定义虚拟事件监听和触发
 evt.on(element, 'custom', function (e) {
     alert('Got custom on: ' + this.className + ' , with message: ' + e.msg);
 });
 evt.trigger(child, 'custom', {
     msg : 'From a virtual event'
 });
-// 虚拟事件委派监听和触发
+// 自定义虚拟事件委派监听和触发
 evt.on(wrap, 'custom', '.child', function (e) {
     alert('Got custom on: ' + this.className + ', from delegate');
 });
@@ -94,6 +100,37 @@ evt.on(element, 'tap', function () {
 evt.on(wrap, 'tap', '.child', function () {
     alert('Got tapped on: ' + this.className + ', by delegate');
 });
+```
+
+##### subscribe(event, fn) : 订阅广播
+
+##### unsubscribe(event\[, fn\]) : 取消订阅广播
+
+##### publish(event\[, data\]) : 发布广播
+
+`data为对象类型，可用于为广播监听者补充必要数据，但禁用以下键名：target、type`
+
+```javascript
+// 广播机制综合实例
+// NO.1订阅者
+evt.subscribe('aMsg', aMsgHanderNO1);
+function aMsgHanderNO1 (data) {
+    alert('Subscriber NO1 got a broadcast named "' + data.type + '", with message: "' + data.msg + '"');
+}
+// NO.2订阅者
+evt.subscribe('aMsg', function (data) {
+    alert('Subscriber NO2 aslo got a broadcast named "' + data.type + '", with message: "' + data.msg + '"');
+});
+// 广播
+evt.publish('aMsg', {
+    msg : 'msg a'
+});
+// 可直接广播，不带信息
+evt.publish('aMsg');
+// 取消NO.1订阅者的订阅行为
+evt.unsubscribe('aMsg', aMsgHanderNO1);
+// 也可直接取消所有订阅者的订阅行为
+evt.unsubscribe('aMsg');
 ```
 
 #### 别名

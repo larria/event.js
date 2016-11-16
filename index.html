@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no"/>
     <script src="src/event.js"></script>
     <style>
+        body{ padding-bottom: 300px;}
         h2{}
         .wrap{ padding: 10px 50px; background-color: #eee;}
         .child{margin: 20px; background-color: lightblue; font-size: 30px;}
@@ -147,8 +148,66 @@
 
         evt.on(btnTrigger, 'click', function () {
             evt.trigger(wrap.querySelectorAll('.child')[1], 'custom', {
-                msg : 'This is a custom event'
+                msg : 'Custom event data'
             });
+        });
+    })();
+    </script>
+    <h2>广播</h2>
+    <div class="wrap" id="wrap-subscribe">
+        <button class="btn" id="btn-publish0">publish 'aMsg' to its subscribers</button>
+        <button class="btn" id="btn-publish1">publish 'bMsg' to its subscribers</button>
+        <br>
+        <button class="btn" id="btn-unsubscribe0">unsubscribe 'aMsg' to its subscriber NO1</button>
+        <button class="btn" id="btn-unsubscribe1">unsubscribe 'aMsg' to its all subscribers</button>
+        <button class="btn" id="btn-unsubscribe2">unsubscribe 'bMsg' to its all subscribers</button>
+    </div>
+    <script>
+    (function(){
+        var btnPublish0 = document.getElementById('btn-publish0');
+        var btnPublish1 = document.getElementById('btn-publish1');
+        var btnUnsubscribe0 = document.getElementById('btn-unsubscribe0');
+        var btnUnsubscribe1 = document.getElementById('btn-unsubscribe1');
+        var btnUnsubscribe2 = document.getElementById('btn-unsubscribe2');
+
+        // NO1 suscriber
+        evt.subscribe('aMsg', aMsgHanderNO1);
+        function aMsgHanderNO1 (data) {
+            alert('Subscriber NO1 got a broadcast named "' + data.type + '", with message: "' + data.msg + '"');
+        }
+
+        // NO2 suscriber
+        evt.subscribe('aMsg', function (data) {
+            alert('Subscriber NO2 aslo got a broadcast named "' + data.type + '", with message: "' + data.msg + '"');
+        });
+
+        // NO3 suscriber
+        evt.subscribe('bMsg', function (data) {
+            alert('Subscriber NO3 got a broadcast named "' + data.type + '", with message: "' + data.msg + '"');
+        });
+
+        evt.on(btnPublish0, 'click', function () {
+            evt.publish('aMsg', {
+                msg : 'Broadcast data a'
+            });
+        });
+
+        evt.on(btnPublish1, 'click', function () {
+            evt.publish('bMsg', {
+                msg : 'Broadcast data b'
+            });
+        });
+
+        evt.on(btnUnsubscribe0, 'click', function () {
+            evt.unsubscribe('aMsg', aMsgHanderNO1);
+        });
+
+        evt.on(btnUnsubscribe1, 'click', function () {
+            evt.unsubscribe('aMsg');
+        });
+
+        evt.on(btnUnsubscribe2, 'click', function () {
+            evt.unsubscribe('bMsg');
         });
     })();
     </script>
