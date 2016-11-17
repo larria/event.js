@@ -6,7 +6,7 @@
 (function(){
     var evt = {};
     var special = {};
-    var _bcObj = {};
+    var _broadcastSubject = {};
 
     function on (el) {
         var type, deleQuery, handle;
@@ -119,15 +119,15 @@
     }
 
     function subscribe (type, handle) {
-        on(_bcObj, type, handle);
+        on(_broadcastSubject, type, handle);
     }
 
     function unsubscribe (type, handle) {
-        off(_bcObj, type, handle);
+        off(_broadcastSubject, type, handle);
     }
 
     function publish (type, pubData) {
-        trigger(_bcObj, type, pubData);
+        trigger(_broadcastSubject, type, pubData);
     }
 
     function trigger (el, type, e) {
@@ -158,12 +158,18 @@
     }
 
     function _initElement (el, type) {
-        var inited = el.delegs && el.events;
+        var eventInited, specialInited;
+        eventInited = el.delegs && el.events;
+
         el.delegs = el.delegs || {};
         el.delegs[type] = el.delegs[type] || [];
         el.events = el.events || {};
         el.events[type] = el.events[type] || [];
-        if(!inited) {
+        
+        el.special = el.special || {};
+        specialInited = type in el.special;
+
+        if(!eventInited) {
             if('on' + type in el) {
                 _addEvent(el, type, function () {
                     var i, len;
@@ -174,9 +180,10 @@
                         el.events[type][i].apply(el, arguments);
                     }
                 });
-            } else if(special[type]) {
-                special[type](el);
             }
+        } else if(!specialInited && special[type]) {
+            special[type](el);
+            el.special[type] = true;
         }
     }
 
@@ -185,7 +192,11 @@
             obj = {};
         }
         for(var i in toExtendObj) {
-            obj[i] = toExtendObj[i];
+            // in ie8, got error while setting the 'type' attr of a event object
+            try{
+                obj[i] = toExtendObj[i];
+            }
+            catch(e){}
         }
         return obj;
     }
@@ -198,7 +209,7 @@
         }
     }
 
-    function _contains(a, b) {
+    function _contains (a, b) {
         if (a === b) {
             return true;
         }
@@ -228,6 +239,7 @@
     evt.publish = publish;
     evt.trigger = trigger;
     evt.special = special;
+
     if (typeof module !== 'undefined' && module.exports && this.module !== module) { module.evt = evt; }
     else if (typeof define === 'function' && define.amd) { define(evt); }
     else { window.evt = evt; };
